@@ -1,0 +1,430 @@
+/**
+ * SF-Intel Studio - Styles
+ * Premium glassmorphic design for Salesforce integration
+ */
+
+/* ===== Notifications ===== */
+.sf-intel-notifications {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+}
+
+.sf-intel-notification {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-left: 4px solid;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.sf-intel-notification--success { border-left-color: #27ae60; }
+.sf-intel-notification--error { border-left-color: #e74c3c; }
+.sf-intel-notification--warning { border-left-color: #f39c12; }
+.sf-intel-notification--info { border-left-color: #3498db; }
+
+.sf-intel-notification__content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.sf-intel-notification__icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.sf-intel-notification__message {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #2c3e50;
+}
+
+.sf-intel-notification__close {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #95a5a6;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.sf-intel-notification__close:hover {
+  color: #2c3e50;
+}
+
+.sf-intel-notification__action {
+  margin-left: 12px;
+  padding: 6px 12px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sf-intel-notification__action:hover {
+  background: #2980b9;
+}
+
+/* ===== Intelligence Panel ===== */
+.sf-intel-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 400px;
+  max-height: 600px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  z-index: 999998;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sf-intel-panel--collapsed .sf-intel-panel__content {
+  display: none;
+}
+
+.sf-intel-panel--collapsed {
+  max-height: 60px;
+}
+
+.sf-intel-panel__header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: grab;
+  user-select: none;
+}
+
+.sf-intel-panel__header:active {
+  cursor: grabbing;
+}
+
+.sf-intel-panel__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.sf-intel-panel__icon {
+  font-size: 20px;
+}
+
+.sf-intel-panel__toggle {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: background 0.2s;
+}
+
+.sf-intel-panel__toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.sf-intel-panel--collapsed .sf-intel-panel__toggle-icon {
+  transform: rotate(-90deg);
+}
+
+.sf-intel-panel__toggle-icon {
+  transition: transform 0.3s;
+}
+
+.sf-intel-panel__content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.sf-intel-panel__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 16px;
+}
+
+.sf-intel-panel__loading p {
+  color: #7f8c8d;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ===== Spinner ===== */
+.sf-intel-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(102, 126, 234, 0.2);
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Sections ===== */
+.sf-intel-section {
+  margin-bottom: 24px;
+}
+
+.sf-intel-section:last-child {
+  margin-bottom: 0;
+}
+
+.sf-intel-section__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===== Risk Score ===== */
+.sf-intel-risk-score {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 16px;
+  border-left: 4px solid;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sf-intel-risk-score__level {
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sf-intel-risk-score__value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* ===== Stats ===== */
+.sf-intel-stat-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sf-intel-stat {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+}
+
+.sf-intel-stat__label {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.sf-intel-stat__value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* ===== Lists ===== */
+.sf-intel-list ul {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: #2c3e50;
+}
+
+.sf-intel-list li {
+  margin-bottom: 4px;
+}
+
+/* ===== Buttons ===== */
+.sf-intel-button {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sf-intel-button--primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.sf-intel-button--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* ===== Risk Badge (in page header) ===== */
+.sf-intel-risk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.sf-intel-risk-badge__icon {
+  font-size: 16px;
+}
+
+/* ===== Toolbar ===== */
+.sf-intel-toolbar {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 999998;
+}
+
+.sf-intel-toolbar__button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  transition: all 0.2s;
+}
+
+.sf-intel-toolbar__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+}
+
+.sf-intel-toolbar__icon {
+  font-size: 18px;
+}
+
+/* ===== Text Utilities ===== */
+.sf-intel-text--muted {
+  color: #95a5a6;
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* ===== Dark Mode Support ===== */
+@media (prefers-color-scheme: dark) {
+  .sf-intel-panel {
+    background: rgba(30, 30, 30, 0.98);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .sf-intel-notification {
+    background: rgba(30, 30, 30, 0.98);
+  }
+
+  .sf-intel-notification__message,
+  .sf-intel-section__title,
+  .sf-intel-risk-score__value,
+  .sf-intel-stat__value {
+    color: #ecf0f1;
+  }
+
+  .sf-intel-stat,
+  .sf-intel-risk-score {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .sf-intel-list ul {
+    color: #ecf0f1;
+  }
+
+  .sf-intel-notification__close:hover {
+    color: #ecf0f1;
+  }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .sf-intel-panel {
+    width: calc(100% - 40px);
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .sf-intel-notifications {
+    max-width: calc(100% - 40px);
+    right: 10px;
+  }
+}

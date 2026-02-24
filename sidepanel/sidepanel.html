@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SF-Intel Studio IDE</title>
+    <link rel="stylesheet" href="sidepanel.css">
+    <link rel="icon" type="image/png" href="../icons/app_logo_32.png">
+</head>
+
+<body>
+    <div class="ide-container">
+        <!-- Header -->
+        <header class="ide-header">
+            <div class="ide-header__branding">
+                <span class="ide-header__icon"><img src="../icons/app_logo_32.png" alt="Logo" style="width: 16px; height: 16px; vertical-align: middle;"></span>
+                <h1 class="ide-header__title">SF-Intel Studio</h1>
+            </div>
+            <div class="ide-header__actions">
+                <button class="icon-button" id="refreshFiles" title="Refresh files">
+                    <span>🔄</span>
+                </button>
+                <button class="icon-button" id="openFullIDE" title="Open full IDE">
+                    <span>🚀</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main IDE Layout -->
+        <div class="ide-main">
+            <!-- File Explorer -->
+            <section class="file-explorer" id="fileExplorer">
+                <div class="section-header">
+                    <h2 class="section-title">Files</h2>
+                    <div class="section-actions">
+                        <button class="icon-button-small" id="collapseAll" title="Collapse all">
+                            <span>▼</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="file-tree-loading" id="fileTreeLoading">
+                    <div class="spinner"></div>
+                    <p>Loading files...</p>
+                </div>
+
+                <div class="file-tree" id="fileTree" style="display: none;">
+                    <!-- File tree will be populated here -->
+                </div>
+
+                <div class="file-tree-empty" id="fileTreeEmpty" style="display: none;">
+                    <p>No files found</p>
+                    <button class="btn btn-sm" id="syncOrg">Sync Org</button>
+                </div>
+            </section>
+
+            <!-- Editor Container -->
+            <section class="editor-section">
+                <!-- No File Open -->
+                <div class="editor-empty" id="editorEmpty">
+                    <div class="editor-empty__content">
+                        <span class="editor-empty__icon">📝</span>
+                        <h3 class="editor-empty__title">No file open</h3>
+                        <p class="editor-empty__text">Select a file from the explorer to start editing</p>
+                    </div>
+                </div>
+
+                <!-- Editor Tabs -->
+                <div class="editor-tabs" id="editorTabs" style="display: none;">
+                    <!-- Tabs will be added dynamically -->
+                </div>
+
+                <!-- Monaco Editor Container -->
+                <div class="editor-container" id="editorContainer" style="display: none;">
+                    <!-- Monaco editor will be mounted here -->
+                </div>
+
+                <!-- Editor Footer -->
+                <div class="editor-footer" id="editorFooter" style="display: none;">
+                    <div class="editor-footer__info">
+                        <span id="editorLanguage">Apex</span>
+                        <span id="editorPosition">Ln 1, Col 1</span>
+                        <span id="editorModified" style="display: none;">●Modified</span>
+                    </div>
+                    <div class="editor-footer__actions">
+                        <button class="btn btn-sm" id="saveFile">💾 Save</button>
+                        <button class="btn btn-sm btn-primary" id="deployFile">🚀 Deploy</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Intelligence Panel (Bottom) -->
+        <section class="intelligence-panel" id="intelligencePanel">
+            <div class="intelligence-header">
+                <h3 class="intelligence-title">Intelligence</h3>
+                <button class="icon-button-small" id="toggleIntelligence">
+                    <span>▼</span>
+                </button>
+            </div>
+            <div class="intelligence-content" id="intelligenceContent">
+                <div class="intelligence-loading">
+                    <div class="spinner-sm"></div>
+                    <span>Analyzing...</span>
+                </div>
+                <div class="intelligence-data" id="intelligenceData" style="display: none;">
+                    <!-- Intelligence data will be populated here -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../lib/utils.js"></script>
+    <script src="../lib/api-client.js"></script>
+    <script src="../lib/monaco-loader.js"></script>
+    <script src="sidepanel.js"></script>
+</body>
+
+</html>

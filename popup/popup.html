@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SF-Intel Studio</title>
+    <link rel="stylesheet" href="popup.css">
+    <link rel="icon" type="image/png" href="../icons/app_logo_32.png">
+  </head>
+<body>
+  <div class="popup">
+    <header class="popup__header">
+      <div class="popup__branding">
+        <span class="popup__icon"><img src="../icons/app_logo_32.png" alt="Logo" style="width: 16px; height: 16px; vertical-align: middle;"></span>
+        <h1 class="popup__title">SF-Intel Studio</h1>
+      </div>
+      <div class="popup__version">v3.6.0</div>
+    </header>
+
+    <main class="popup__content">
+      <!-- Server Status -->
+      <section class="status-section">
+        <div class="status-indicator" id="serverStatus">
+          <div class="status-indicator__dot"></div>
+          <span class="status-indicator__text">Checking server...</span>
+        </div>
+      </section>
+
+      <!-- Stats Section -->
+      <section class="stats-section" id="statsSection" style="display: none;">
+        <h2 class="section-title">Org Statistics</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__value" id="statClasses">-</div>
+            <div class="stat-card__label">Apex Classes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" id="statObjects">-</div>
+            <div class="stat-card__label">Objects</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" id="statDependencies">-</div>
+            <div class="stat-card__label">Dependencies</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" id="statQueries">-</div>
+            <div class="stat-card__label">SOQL Queries</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="actions-section">
+        <h2 class="section-title">Quick Actions</h2>
+        <button class="action-button action-button--primary" id="openDashboard">
+          <span class="action-button__icon">📊</span>
+          <span class="action-button__text">Open Dashboard</span>
+        </button>
+        <button class="action-button" id="refreshCache">
+          <span class="action-button__icon">🔄</span>
+          <span class="action-button__text">Refresh Cache</span>
+        </button>
+      </section>
+
+      <!-- Settings Link -->
+      <section class="settings-section">
+        <button class="settings-button" id="openSettings">
+          <span class="settings-button__icon">⚙️</span>
+          <span class="settings-button__text">Settings</span>
+        </button>
+      </section>
+    </main>
+
+    <footer class="popup__footer">
+      <a href="http://127.0.0.1:3000" target="_blank" class="footer-link">
+        View Full Dashboard →
+      </a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

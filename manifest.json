@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "SF-Intel Studio",
+  "version": "3.6.3",
+  "description": "Advanced Salesforce development IDE with apex editing, metadata management, and intelligent deployment tools.",
+  "icons": {
+    "16": "icons/app_logo_16.png",
+    "32": "icons/app_logo_32.png",
+    "48": "icons/app_logo_48.png",
+    "128": "icons/app_logo_128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/app_logo_16_inactive.png",
+      "32": "icons/app_logo_32_inactive.png",
+      "48": "icons/app_logo_48_inactive.png",
+      "128": "icons/app_logo_128_inactive.png"
+    },
+    "default_title": "SF-Intel Studio — Navigate to Salesforce"
+  },
+  "permissions": ["activeTab", "cookies"],
+  "host_permissions": [
+    "*://*.salesforce.com/*",
+    "*://*.force.com/*",
+    "*://*.visualforce.com/*",
+    "*://*.salesforce-setup.com/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.salesforce.com/*", "*://*.lightning.force.com/*"],
+      "js": ["content/injector.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["ide/*", "dist/monaco/*", "icons/*", "content/network-monitor.js"],
+      "matches": ["*://*.salesforce.com/*", "*://*.force.com/*"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'none'"
+  }
+}
