@@ -11,7 +11,7 @@
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-To report a vulnerability, open a [GitHub Security Advisory](https://github.com/Ajil5467/sf-intel-studio/security/advisories/new) on this repository. This keeps the disclosure private until a fix is available.
+To report a vulnerability, email **ajiltu5467@gmail.com** with the subject line `[Security] SF-Intel Studio`. This keeps the disclosure private until a fix is available.
 
 Include in your report:
 - A description of the vulnerability
