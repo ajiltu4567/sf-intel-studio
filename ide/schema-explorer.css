@@ -1,0 +1,880 @@
+/* ============================================
+   Schema Explorer — SF-Intel Studio
+   Enterprise-grade object relationship visualizer
+   ============================================ */
+
+/* Shell */
+.schema-explorer-shell {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background: #1e1e1e;
+    color: #cccccc;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Toolbar ────────────────────────────────── */
+.schema-toolbar {
+    height: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    background: #2d2d2d;
+    border-bottom: 1px solid #3c3c3c;
+}
+
+.schema-toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.schema-toolbar-section.right {
+    margin-left: auto;
+}
+
+.schema-toolbar-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.schema-toolbar-divider {
+    width: 1px;
+    height: 22px;
+    background: #3c3c3c;
+    flex-shrink: 0;
+}
+
+/* ── Object Picker ──────────────────────────── */
+.schema-object-picker {
+    position: relative;
+    width: 260px;
+}
+
+.schema-picker-input {
+    width: 100%;
+    height: 28px;
+    padding: 0 8px 0 28px;
+    background: #3c3c3c;
+    border: 1px solid #4a4a4a;
+    border-radius: 4px;
+    color: #e0e0e0;
+    font-size: 12px;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.schema-picker-input:focus {
+    border-color: #007acc;
+    box-shadow: 0 0 0 1px rgba(0, 122, 204, 0.25);
+}
+
+.schema-picker-input::placeholder {
+    color: #666;
+}
+
+.schema-picker-search-icon {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+}
+
+.schema-picker-dropdown {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    right: 0;
+    max-height: 320px;
+    overflow-y: auto;
+    background: #252526;
+    border: 1px solid #3c3c3c;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    display: none;
+}
+
+.schema-picker-dropdown.open {
+    display: block;
+}
+
+.schema-picker-item {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    font-size: 12px;
+    color: #cccccc;
+    cursor: pointer;
+    transition: background 0.1s ease;
+}
+
+.schema-picker-item:hover {
+    background: #094771;
+}
+
+.schema-picker-item.selected {
+    background: #0e639c;
+}
+
+.schema-picker-obj-icon {
+    color: #666;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.schema-picker-obj-name {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12px;
+    color: #e0e0e0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.schema-picker-item .obj-label {
+    color: #777;
+    font-size: 10px;
+    margin-left: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 110px;
+}
+
+.schema-picker-item .obj-badge {
+    font-size: 8px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+.schema-picker-item .obj-badge.custom {
+    background: rgba(243, 156, 18, 0.15);
+    color: #f39c12;
+}
+
+.schema-picker-item .obj-badge.standard {
+    background: rgba(79, 172, 254, 0.12);
+    color: #4facfe;
+}
+
+.schema-picker-empty {
+    padding: 16px 12px;
+    text-align: center;
+    color: #555;
+    font-size: 11px;
+}
+
+/* ── Depth Controls ─────────────────────────── */
+.schema-depth-group {
+    display: flex;
+    border: 1px solid #4a4a4a;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.schema-depth-btn {
+    height: 26px;
+    padding: 0 12px;
+    background: transparent;
+    border: none;
+    border-right: 1px solid #4a4a4a;
+    color: #888;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+.schema-depth-btn:last-child {
+    border-right: none;
+}
+
+.schema-depth-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #ccc;
+}
+
+.schema-depth-btn.active {
+    background: #007acc;
+    color: #fff;
+}
+
+/* ── Filter Toggles ─────────────────────────── */
+.schema-toggle-btn {
+    height: 26px;
+    padding: 0 10px;
+    background: transparent;
+    border: 1px solid #4a4a4a;
+    border-radius: 4px;
+    color: #888;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.schema-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ccc;
+}
+
+.schema-toggle-btn.active {
+    border-color: rgba(0, 122, 204, 0.5);
+    color: #e0e0e0;
+    background: rgba(0, 122, 204, 0.08);
+}
+
+.schema-toggle-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ── Toolbar Buttons ────────────────────────── */
+.schema-toolbar-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid #4a4a4a;
+    border-radius: 4px;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.schema-toolbar-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    border-color: #666;
+}
+
+/* ── Content Area ───────────────────────────── */
+.schema-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ── Relationship Panel (left) ──────────────── */
+.schema-rel-panel {
+    width: 270px;
+    min-width: 270px;
+    background: #252526;
+    border-right: 1px solid #3c3c3c;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.schema-rel-panel.hidden {
+    display: none;
+}
+
+.schema-rel-header {
+    padding: 12px 14px;
+    border-bottom: 1px solid #3c3c3c;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #2a2a2a;
+}
+
+.schema-rel-obj-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e0e0e0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.schema-rel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2px 0;
+}
+
+.schema-rel-section {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.schema-rel-section:last-child {
+    border-bottom: none;
+}
+
+.schema-rel-section-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s ease;
+}
+
+.schema-rel-section-header:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.schema-rel-section-header .chevron {
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+    color: #666;
+}
+
+.schema-rel-section-header.collapsed .chevron {
+    transform: rotate(-90deg);
+}
+
+.schema-rel-count-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 0 5px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.schema-rel-count-badge.md {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+}
+
+.schema-rel-count-badge.lookup {
+    background: rgba(79, 172, 254, 0.12);
+    color: #4facfe;
+}
+
+.schema-rel-count-badge.child {
+    background: rgba(39, 174, 96, 0.12);
+    color: #27ae60;
+}
+
+.schema-rel-count-badge.field {
+    background: rgba(255, 255, 255, 0.06);
+    color: #888;
+}
+
+.schema-rel-section-body {
+    overflow: hidden;
+}
+
+.schema-rel-section-body.collapsed {
+    display: none;
+}
+
+.schema-rel-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px 5px 26px;
+    font-size: 11px;
+    color: #ccc;
+    cursor: pointer;
+    transition: background 0.1s ease;
+}
+
+.schema-rel-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.schema-rel-field-name {
+    color: #4facfe;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.schema-rel-target {
+    color: #777;
+    font-size: 10px;
+    margin-left: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100px;
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.schema-rel-type-badge {
+    font-size: 8px;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #888;
+    flex-shrink: 0;
+}
+
+.schema-rel-empty {
+    padding: 10px 14px 10px 26px;
+    color: #555;
+    font-size: 11px;
+    font-style: italic;
+}
+
+/* ── Badges ─────────────────────────────────── */
+.schema-badge {
+    font-size: 8px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+}
+
+.schema-badge.lookup {
+    background: rgba(74, 144, 217, 0.15);
+    color: #4a90d9;
+}
+
+.schema-badge.child {
+    background: rgba(39, 174, 96, 0.15);
+    color: #27ae60;
+}
+
+.schema-badge.master-detail {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+}
+
+.schema-badge.custom-obj {
+    background: rgba(243, 156, 18, 0.15);
+    color: #f39c12;
+}
+
+.schema-badge.standard-obj {
+    background: rgba(79, 172, 254, 0.12);
+    color: #4facfe;
+}
+
+/* ── Graph Container ────────────────────────── */
+.schema-graph-container {
+    flex: 1;
+    position: relative;
+    background: #1a1a1e;
+    overflow: hidden;
+}
+
+.schema-graph-container svg {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+.schema-graph-container svg:active {
+    cursor: grabbing;
+}
+
+/* ── Graph Nodes ────────────────────────────── */
+.schema-node {
+    cursor: pointer;
+}
+
+.schema-node circle {
+    stroke-width: 2px;
+    transition: stroke-width 0.15s ease, opacity 0.3s ease;
+}
+
+.schema-node.standard circle {
+    fill: #4facfe;
+    stroke: #3a8fd4;
+}
+
+.schema-node.custom circle {
+    fill: #f39c12;
+    stroke: #d4850a;
+}
+
+.schema-node.center circle {
+    fill: #007acc;
+    stroke: #005a9e;
+}
+
+.schema-node.selected circle {
+    stroke: #fff;
+    stroke-width: 3px;
+    filter: url(#node-glow);
+}
+
+.schema-node-glow {
+    pointer-events: none;
+}
+
+.schema-node-abbr {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
+    fill: rgba(255, 255, 255, 0.95);
+    text-anchor: middle;
+    pointer-events: none;
+    user-select: none;
+}
+
+.schema-node-label {
+    font-size: 10px;
+    fill: #aaa;
+    text-anchor: middle;
+    pointer-events: none;
+    user-select: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    paint-order: stroke;
+    stroke: #1a1a1e;
+    stroke-width: 3px;
+    stroke-linejoin: round;
+}
+
+.schema-node.center .schema-node-label {
+    fill: #ddd;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.schema-node text {
+    font-size: 10px;
+    fill: #aaa;
+    text-anchor: middle;
+    pointer-events: none;
+    user-select: none;
+}
+
+.schema-node.center text {
+    font-size: 11px;
+    font-weight: 600;
+    fill: #ddd;
+}
+
+.schema-node.dimmed circle,
+.schema-node.dimmed .schema-node-glow {
+    opacity: 0.1;
+}
+
+.schema-node.dimmed text,
+.schema-node.dimmed .schema-node-abbr,
+.schema-node.dimmed .schema-node-label {
+    opacity: 0.1;
+}
+
+/* ── Graph Links ────────────────────────────── */
+.schema-link {
+    stroke: #555;
+    stroke-width: 1.5px;
+    transition: opacity 0.3s ease;
+}
+
+.schema-link.lookup {
+    stroke-dasharray: 5, 3;
+    stroke: #4a90d9;
+    stroke-width: 1.5px;
+}
+
+.schema-link.master-detail {
+    stroke: #e74c3c;
+    stroke-width: 2.5px;
+}
+
+.schema-link.child {
+    stroke: #27ae60;
+    stroke-width: 1.2px;
+}
+
+.schema-link.dimmed {
+    opacity: 0.06;
+}
+
+.schema-link-label {
+    font-size: 9px;
+    fill: #bbb;
+    text-anchor: middle;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    font-family: 'Consolas', 'Courier New', monospace;
+    paint-order: stroke;
+    stroke: #1a1a1e;
+    stroke-width: 4px;
+    stroke-linejoin: round;
+}
+
+.schema-link-label.visible {
+    opacity: 1;
+}
+
+/* ── Legend ──────────────────────────────────── */
+.schema-legend {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px;
+    background: rgba(30, 30, 30, 0.92);
+    border: 1px solid #3c3c3c;
+    border-radius: 8px;
+    font-size: 10px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    min-width: 140px;
+}
+
+.schema-legend-title {
+    font-size: 9px;
+    font-weight: 700;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.schema-legend-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 4px;
+}
+
+.schema-legend-group + .schema-legend-group {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: 2px;
+}
+
+.schema-legend-subtitle {
+    font-size: 9px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1px;
+}
+
+.schema-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #999;
+    font-size: 10px;
+}
+
+.schema-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.schema-legend-line {
+    width: 22px;
+    height: 0;
+    flex-shrink: 0;
+}
+
+/* ── Zoom Controls ──────────────────────────── */
+.schema-controls {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: rgba(30, 30, 30, 0.92);
+    border: 1px solid #3c3c3c;
+    border-radius: 8px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.schema-zoom-btn {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.12s ease;
+}
+
+.schema-zoom-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.schema-zoom-btn + .schema-zoom-btn {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Node Count / Stats ─────────────────────── */
+.schema-node-count {
+    font-size: 10px;
+    color: #666;
+    padding: 0 6px;
+    white-space: nowrap;
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+/* ── Loading & Empty States ─────────────────── */
+.schema-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: rgba(26, 26, 30, 0.88);
+    z-index: 10;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.schema-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #333;
+    border-top-color: #007acc;
+    border-radius: 50%;
+    animation: schemaSpin 0.8s linear infinite;
+}
+
+@keyframes schemaSpin {
+    to { transform: rotate(360deg); }
+}
+
+.schema-loading-text {
+    font-size: 12px;
+    color: #999;
+}
+
+.schema-loading-text strong {
+    color: #ccc;
+    font-weight: 600;
+}
+
+.schema-empty-state {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.schema-empty-icon {
+    color: #444;
+}
+
+.schema-empty-title {
+    font-size: 14px;
+    color: #888;
+    font-weight: 500;
+}
+
+.schema-empty-desc {
+    font-size: 11px;
+    color: #555;
+    max-width: 280px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* ── Panel Hint (empty panel state) ─────────── */
+.schema-panel-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.schema-panel-hint-title {
+    font-size: 12px;
+    color: #888;
+    font-weight: 500;
+}
+
+.schema-panel-hint-desc {
+    font-size: 10px;
+    color: #555;
+    line-height: 1.5;
+    max-width: 180px;
+}
+
+/* ── Scrollbars ─────────────────────────────── */
+.schema-rel-body::-webkit-scrollbar,
+.schema-picker-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.schema-rel-body::-webkit-scrollbar-track,
+.schema-picker-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.schema-rel-body::-webkit-scrollbar-thumb,
+.schema-picker-dropdown::-webkit-scrollbar-thumb {
+    background: #3c3c3c;
+    border-radius: 3px;
+}
+
+.schema-rel-body::-webkit-scrollbar-thumb:hover,
+.schema-picker-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

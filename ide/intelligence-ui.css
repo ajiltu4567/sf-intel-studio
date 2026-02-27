@@ -1,0 +1,245 @@
+/**
+ * Intelligence UI Styles
+ * v1.0.0 (Phase 5)
+ */
+
+#intelligence-panel {
+    position: fixed;
+    right: -420px;
+    top: 60px; /* Below header */
+    width: 400px;
+    height: calc(100% - 60px);
+    background: #1e1e1e;
+    border-left: 1px solid #333;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    color: #e0e0e0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#intelligence-panel.visible {
+    right: 0;
+}
+
+#intelligence-panel .panel-header {
+    padding: 16px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #252526;
+}
+
+#intelligence-panel .panel-header h3 {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+#intelligence-panel .close-btn {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+#intelligence-panel .close-btn:hover {
+    color: #fff;
+}
+
+/* Tabs */
+#intelligence-panel .panel-tabs {
+    display: flex;
+    background: #252526;
+    border-bottom: 1px solid #333;
+}
+
+#intelligence-panel .tab-btn {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #888;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#intelligence-panel .tab-btn:hover {
+    color: #ccc;
+}
+
+#intelligence-panel .tab-btn.active {
+    color: #3498db;
+    border-bottom-color: #3498db;
+    background: rgba(52, 152, 219, 0.05);
+}
+
+/* Content */
+#intelligence-panel .panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+#intelligence-panel .view {
+    display: none;
+}
+
+#intelligence-panel .view.active {
+    display: block;
+}
+
+/* Impact View Styles */
+.analysis-header {
+    margin-bottom: 24px;
+}
+
+.analysis-header h4 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    color: #fff;
+    word-break: break-all;
+}
+
+.risk-badge {
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.risk-low { background: rgba(39, 174, 96, 0.2); color: #2ecc71; border: 1px solid rgba(39, 174, 96, 0.3); }
+.risk-medium { background: rgba(241, 196, 15, 0.2); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3); }
+.risk-high { background: rgba(230, 126, 34, 0.2); color: #e67e22; border: 1px solid rgba(230, 126, 34, 0.3); }
+.risk-critical { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); }
+
+.risk-score {
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left: 1px solid currentColor;
+    opacity: 0.8;
+}
+
+.section {
+    margin-bottom: 24px;
+}
+
+.section h5 {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 12px 0;
+    border-bottom: 1px solid #333;
+    padding-bottom: 4px;
+}
+
+.reasons-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.reasons-list li {
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 4px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.reasons-list li::before {
+    content: "•";
+    color: #3498db;
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.dependency-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dependency-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background: #252526;
+    border-radius: 4px;
+    font-size: 12px;
+    border: 1px solid #333;
+    transition: border-color 0.2s;
+}
+
+.dependency-item:hover {
+    border-color: #444;
+}
+
+.type-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+    background: #444;
+    color: #aaa;
+}
+
+.type-badge.apexclass { background: rgba(52, 152, 219, 0.2); color: #3498db; }
+.type-badge.apextrigger { background: rgba(155, 89, 182, 0.2); color: #9b59b6; }
+.type-badge.flow { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+
+.dependency-item .name {
+    flex: 1;
+    color: #ccc;
+    font-weight: 500;
+}
+
+.edge-info {
+    font-size: 10px;
+    color: #666;
+    font-style: italic;
+}
+
+.critical-warning {
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    color: #e74c3c;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 20px;
+}
+
+.placeholder, .empty, .error-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-style: italic;
+    font-size: 13px;
+}
+
+#dependency-graph-container {
+    width: 100%;
+    height: 400px;
+    background: #000;
+    border-radius: 8px;
+    border: 1px solid #333;
+}

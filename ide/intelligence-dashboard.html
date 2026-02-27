@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SF-Intel Intelligence Dashboard</title>
+    <link rel="stylesheet" href="ide.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 24px;
+            background: #1e1e1e;
+            color: #ccc;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-y: auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: auto auto;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dash-card {
+            background: rgba(37, 37, 38, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .dash-card.full-width {
+            grid-column: span 2;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4facfe;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .visual-container {
+            flex: 1;
+            min-height: 300px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: rgba(45, 45, 45, 0.5);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            border-bottom: 2px solid #333;
+            transition: all 0.3s;
+        }
+
+        .metric-card:hover {
+            border-bottom-color: #4facfe;
+            background: rgba(79, 172, 254, 0.1);
+        }
+
+        .metric-card .value {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .metric-card .label {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .neon-blue { color: #4facfe; text-shadow: 0 0 10px rgba(79, 172, 254, 0.5); }
+        .neon-purple { color: #f093fb; text-shadow: 0 0 10px rgba(240, 147, 251, 0.5); }
+        .neon-green { color: #2ecc71; text-shadow: 0 0 10px rgba(46, 204, 113, 0.5); }
+        .neon-orange { color: #f39c12; text-shadow: 0 0 10px rgba(243, 156, 18, 0.5); }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 30, 30, 0.8);
+            z-index: 10;
+        }
+
+        #impact-graph { height: 400px; }
+        #soql-chart { height: 300px; }
+    </style>
+</head>
+<body>
+    <div class="stats-row">
+        <div class="metric-card">
+            <span class="value neon-blue" id="total-classes">---</span>
+            <span class="label">Total Classes</span>
+        </div>
+        <div class="metric-card">
+            <span class="value neon-purple" id="entry-points">---</span>
+            <span class="label">Entry Points</span>
+        </div>
+        <div class="metric-card">
+            <span class="value neon-green" id="avg-soql-score">---</span>
+            <span class="label">Avg SOQL Score</span>
+        </div>
+        <div class="metric-card">
+            <span class="value neon-orange" id="critical-risks">---</span>
+            <span class="label">Critical Risks</span>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <!-- Dependency Explorer -->
+        <div class="dash-card full-width">
+            <div class="card-header">
+                <h2>Dependency Explorer</h2>
+                <div class="controls">
+                    <select id="class-selector" class="ide-select">
+                        <option value="">Select a class to analyze...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="visual-container" id="impact-graph">
+                <div class="loading-overlay">Syncing Intelligence...</div>
+            </div>
+        </div>
+
+        <!-- SOQL Performance -->
+        <div class="dash-card">
+            <div class="card-header">
+                <h2>SOQL Performance Audit</h2>
+            </div>
+            <div class="visual-container">
+                <canvas id="soql-chart-canvas"></canvas>
+            </div>
+        </div>
+
+        <!-- Architecture Sunburst -->
+        <div class="dash-card">
+            <div class="card-header">
+                <h2>Organizational Roles</h2>
+            </div>
+            <div class="visual-container" id="role-sunburst">
+                <div class="loading-overlay">Classification in progress...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="lib/utils.js"></script>
+    <script src="lib/api-client.js"></script>
+    <script src="lib/d3.v7.min.js"></script>
+    <script src="lib/chart.min.js"></script>
+    <script src="modules/reports-viewer.js"></script>
+    <script src="intelligence-dashboard.js"></script>
+</body>
+</html>

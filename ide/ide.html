@@ -1,0 +1,2148 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>SF-Intel Studio</title>
+    <link rel="stylesheet" href="ide.css" />
+    <link rel="stylesheet" href="forensics/emulator-ui.css" />
+    <link rel="stylesheet" href="intelligence-ui.css" />
+    <link rel="stylesheet" href="schema-explorer.css" />
+    <link rel="icon" type="image/png" href="../icons/app_logo_32.png">
+  </head>
+
+  <body>
+    <div id="sf-intel-ide-root">
+      <!-- Header -->
+      <div id="ide-header">
+        <div class="header-left">
+          <h1 class="logo">
+            <span class="logo-icon"><img src="../icons/app_logo_32.png" alt="SF-Intel Logo" style="width: 16px; height: 16px;"></span>
+            SF-INTEL STUDIO
+            <span id="app-version" style="font-size: 10px; color: #555; font-weight: 400;"></span>
+          </h1>
+          <span id="org-type-badge" class="org-type-badge" style="display:none;"></span>
+          <span id="instance-url" class="badge">---</span>
+        </div>
+        <div class="header-right">
+          <div class="dropdown">
+            <button class="dropdown-toggle" id="create-new-btn">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 4a.5.5 0 01.5.5v3h3a.5.5 0 010 1h-3v3a.5.5 0 01-1 0v-3h-3a.5.5 0 010-1h3v-3A.5.5 0 018 4z"/></svg>
+              CREATE NEW
+            </button>
+            <div class="dropdown-content">
+              <a href="#" data-action="new-aura">Aura Component</a>
+              <a href="#" data-action="new-apex">Apex Class</a>
+              <a href="#" data-action="new-trigger">Apex Trigger</a>
+              <a href="#" data-action="new-lwc">Lightning Web Component</a>
+            </div>
+          </div>
+          <button id="sf-intel-save" disabled class="btn-primary">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4.414a2 2 0 0 0-.586-1.414L12 .586A2 2 0 0 0 10.586 0H2zm0 1h8.586L13 4.414V14H3V2H2zm2 9a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v3H4v-3z"/></svg>
+            SAVE & DEPLOY
+          </button>
+          <button id="sf-intel-run-test" class="btn-success" style="display: none">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2l10 6-10 6V2z"/></svg>
+            RUN TEST
+          </button>
+          <button id="sf-intel-coverage-toggle" class="btn-coverage" style="display: none">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5h-2v12h2V2z"/></svg>
+            COVERAGE: OFF
+          </button>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div id="ide-content">
+        <!-- Sidebar Navigation -->
+        <div id="sidebar-nav">
+          <button class="nav-item active" data-view="explorer" title="Metadata Explorer">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 012-2h4l2 2h8a2 2 0 012 2v2"/><rect x="3" y="7" width="18" height="13" rx="2"/></svg>
+          </button>
+          <button class="nav-item" data-view="utilities" title="Developer Utilities">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </button>
+          <button class="nav-item" data-view="admin" title="Admin Utilities">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          </button>
+        </div>
+
+        <!-- Sidebar Panels -->
+        <div id="sidebar-panels">
+          <!-- Metadata Tree Panel -->
+          <div id="explorer-panel" class="sidebar-panel active">
+            <div class="tree-controls">
+              <div class="tree-header-actions">
+                <input
+                  type="text"
+                  id="sf-intel-search"
+                  placeholder="Search metadata..."
+                />
+                <button class="icon-btn" id="tree-create-btn" title="Create New Resources">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 4a.5.5 0 01.5.5v3h3a.5.5 0 010 1h-3v3a.5.5 0 01-1 0v-3h-3a.5.5 0 010-1h3v-3A.5.5 0 018 4z"/></svg>
+                </button>
+              </div>
+              <div class="tab-selector">
+                <button class="sf-intel-tab active" data-type="ApexClass">
+                  CLASSES
+                </button>
+                <button class="sf-intel-tab" data-type="ApexTrigger">
+                  TRIGGERS
+                </button>
+                <button class="sf-intel-tab" data-type="LWC">LWC</button>
+                <button class="sf-intel-tab" data-type="AuraDefinitionBundle">
+                  AURA
+                </button>
+              </div>
+            </div>
+            <div id="sf-intel-tree">
+              <div class="loading">Loading metadata...</div>
+            </div>
+          </div>
+
+          <!-- Utilities Panel -->
+          <div id="utilities-panel" class="sidebar-panel">
+            <div class="panel-header">DEVELOPER UTILITIES</div>
+            <div class="utils-list">
+              <div class="util-item" data-util="apex">
+                <span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2l10 6-10 6V2z"/></svg></span>
+                <div class="info">
+                  <div class="name">Anonymous Apex</div>
+                  <div class="desc">Execute code scratchpad</div>
+                </div>
+              </div>
+              <div class="util-item" data-util="soql">
+                <span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M11.742 10.344a6.5 6.5 0 10-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 001.415-1.414l-3.85-3.85a1.007 1.007 0 00-.115-.1zM12 6.5a5.5 5.5 0 11-11 0 5.5 5.5 0 0111 0z"/></svg></span>
+                <div class="info">
+                  <div class="name">SOQL Runner</div>
+                  <div class="desc">Query objects and export</div>
+                </div>
+              </div>
+              <div class="util-item" data-util="logs">
+                <span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M14 4.5V14a2 2 0 01-2 2H4a2 2 0 01-2-2V2a2 2 0 012-2h5.5L14 4.5zM13 5H9.5a.5.5 0 01-.5-.5V1H4a1 1 0 00-1 1v12a1 1 0 001 1h8a1 1 0 001-1V5zM5 7h6v1H5V7zm0 2h6v1H5V9zm0 2h4v1H5v-1z"/></svg></span>
+                <div class="info">
+                  <div class="name">Log Inspector</div>
+                  <div class="desc">Real-time debug logs</div>
+                </div>
+              </div>
+              <div class="util-item" data-util="tests">
+                <span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 0a.5.5 0 000 1H7v1.07A7.002 7.002 0 008 16a7 7 0 001-13.93V1h.5a.5.5 0 000-1h-3zM8 3a6 6 0 100 12A6 6 0 008 3zm.5 3.5v4a.5.5 0 01-1 0v-4a.5.5 0 011 0z"/></svg></span>
+                <div class="info">
+                  <div class="name">Test Runner</div>
+                  <div class="desc">Run tests and coverage</div>
+                </div>
+              </div>
+              <div class="util-item" data-util="flow">
+                <span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 11.5a.5.5 0 00.5.5h11.793l-3.147 3.146a.5.5 0 00.708.708l4-4a.5.5 0 000-.708l-4-4a.5.5 0 00-.708.708L13.293 11H1.5a.5.5 0 00-.5.5zm14-7a.5.5 0 01-.5.5H2.707l3.147 3.146a.5.5 0 11-.708.708l-4-4a.5.5 0 010-.708l4-4a.5.5 0 11.708.708L2.707 4H14.5a.5.5 0 01.5.5z"/></svg></span>
+                <div class="info">
+                  <div class="name">Code Analysis <span style="font-size:9px;background:#f39c12;color:#000;padding:1px 4px;border-radius:2px;font-weight:700;vertical-align:middle;margin-left:4px;">BETA</span></div>
+                  <div class="desc">Analyze method dependencies</div>
+                </div>
+              </div>
+              <!--
+              <div class="util-item" data-util="record">
+                <span class="icon">🧾</span>
+                <div class="info">
+                  <div class="name">Record Inspector</div>
+                  <div class="desc">Edit data • Verify triggers</div>
+                </div>
+              </div>
+              <div class="util-item" data-util="workflow">
+                <span class="icon">🧬</span>
+                <div class="info">
+                  <div class="name">Workflow Emulator</div>
+                  <div class="desc">Simulate changes • See impact</div>
+                </div>
+              </div>
+              <div class="util-item" data-util="deploy">
+                <span class="icon">🚀</span>
+                <div class="info">
+                  <div class="name">Staged Deploy</div>
+                  <div class="desc">Select files • Deploy to org</div>
+                </div>
+              </div>
+              -->
+            </div>
+          </div>
+
+          <!-- Admin Utilities Panel -->
+          <div id="admin-panel" class="sidebar-panel">
+            <div class="panel-header">ADMIN UTILITIES</div>
+            <div class="utils-list">
+              <div class="util-item" data-util="schema-explorer">
+                <span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="4" cy="4" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="8" cy="12" r="2.5"/><line x1="6" y1="5" x2="7" y2="10"/><line x1="10" y1="5" x2="9" y2="10"/><line x1="6.5" y1="4" x2="9.5" y2="4"/></svg></span>
+                <div class="info">
+                  <div class="name">Schema Explorer</div>
+                  <div class="desc">Visualize object relationships</div>
+                </div>
+              </div>
+              <div class="util-item" data-util="automation">
+                <span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1v4M8 11v4M1 8h4M11 8h4"/><circle cx="8" cy="8" r="3"/><path d="M4.5 4.5l2 2M9.5 9.5l2 2M4.5 11.5l2-2M9.5 4.5l2 2"/></svg></span>
+                <div class="info">
+                  <div class="name">Automation Inspector <span style="font-size:9px;background:#f39c12;color:#000;padding:1px 4px;border-radius:2px;font-weight:700;vertical-align:middle;margin-left:4px;">BETA</span></div>
+                  <div class="desc">Trace blast radius on record save</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Editor & Terminal Area -->
+        <div id="main-area">
+          <div id="editor-area">
+            <!-- Editor Workspace: For source code only -->
+            <div id="editor-workspace" class="workspace">
+              <div id="sf-intel-tabs-wrapper">
+                <div id="sf-intel-tabs-list"></div>
+              </div>
+
+              <div id="sf-intel-editor-header">
+                <div id="file-path">// Select a file to edit</div>
+                <div class="editor-actions">
+                  <button id="ed-preview-lwc" class="ed-btn" title="Preview in Browser" style="display: none">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.27 9.27 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12a7.957 7.957 0 0 0 .468 1.068c.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49z"/></svg>
+                  </button>
+                  <button id="ed-toggle-minimap" class="ed-btn" title="Toggle Minimap">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 3h14v1H1zm0 3h10v1H1zm0 3h12v1H1zm0 3h8v1H1z" opacity="0.5"/><rect x="13" y="2" width="2" height="6" rx="0.5" opacity="0.8"/></svg>
+                  </button>
+                  <button id="ed-toggle-sidebar" class="ed-btn" title="Toggle Sidebar (Ctrl+B)">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2 1h12a1 1 0 011 1v12a1 1 0 01-1 1H2a1 1 0 01-1-1V2a1 1 0 011-1zm0 1v12h3V2H2zm4 0v12h8V2H6z"/></svg>
+                  </button>
+                  <button id="ed-zoom-in" class="ed-btn" title="Zoom In (Ctrl+=)">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"/><path d="M6.5 3a.5.5 0 01.5.5V6h2.5a.5.5 0 010 1H7v2.5a.5.5 0 01-1 0V7H3.5a.5.5 0 010-1H6V3.5a.5.5 0 01.5-.5z"/></svg>
+                  </button>
+                  <button id="ed-zoom-out" class="ed-btn" title="Zoom Out (Ctrl+-)">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"/><path d="M3.5 6a.5.5 0 000 1h6a.5.5 0 000-1h-6z"/></svg>
+                  </button>
+                  <button id="ed-fullscreen" class="ed-btn" title="Full Screen (F11)">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 1h4a.5.5 0 010 1H2v3.5a.5.5 0 01-1 0v-4a.5.5 0 01.5-.5zm0 9a.5.5 0 01.5.5V14h3.5a.5.5 0 010 1h-4a.5.5 0 01-.5-.5v-4a.5.5 0 01.5-.5zm13-9a.5.5 0 01.5.5v4a.5.5 0 01-1 0V2h-3.5a.5.5 0 010-1h4zm.5 9.5v4a.5.5 0 01-.5.5h-4a.5.5 0 010-1H14v-3.5a.5.5 0 011 0z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div id="sf-intel-monaco-container">
+                <iframe
+                  id="editor-iframe"
+                  src="editor.html"
+                  style="width: 100%; height: 100%; border: none"
+                ></iframe>
+                <div id="monaco-placeholder">SELECT A METADATA ITEM</div>
+              </div>
+            </div>
+
+            <!-- Analysis Workspace: For visual code intelligence (SIP-3.2) -->
+            <div id="analysis-workspace" class="workspace hidden">
+              <!-- AnalysisPanel will be mounted here -->
+            </div>
+
+            <!-- Log Inspector Workspace -->
+            <div id="inspector-workspace" class="workspace hidden">
+              <div class="inspector-toolbar">
+                <div class="inspector-controls">
+                  <span class="toolbar-label">LOG INSPECTOR</span>
+                  <div id="log-inspector-tabs" class="tabs">
+                    <button class="tab-btn active" data-view="tree">
+                      TREE
+                    </button>
+                    <button class="tab-btn" data-view="raw">RAW</button>
+                    <button class="tab-btn" data-view="timeline">
+                      TIMELINE
+                    </button>
+                    <button class="tab-btn" data-view="errors">ERRORS</button>
+                    <button class="tab-btn" data-view="limits">LIMITS</button>
+                  </div>
+                </div>
+                <div class="inspector-actions">
+                  <input
+                    type="text"
+                    id="inspector-search"
+                    placeholder="Search execution events..."
+                  />
+                  <button
+                    id="inspector-clear-btn"
+                    class="btn-clear-util"
+                    title="Clear"
+                  >
+                    CLEAR
+                  </button>
+                </div>
+              </div>
+
+              <div id="inspector-views">
+                <div id="view-tree" class="inspector-view active"></div>
+                <div id="view-raw" class="inspector-view"></div>
+                <div id="view-timeline" class="inspector-view"></div>
+                <div id="view-errors" class="inspector-view"></div>
+                <div id="view-limits" class="inspector-view"></div>
+              </div>
+            </div>
+
+            <!-- Utility Workspace: For logs, tests, anonymous apex, soql -->
+            <div id="utility-workspace" class="workspace" style="display: none">
+              <div id="utility-header">
+                <div id="utility-title">Utility Title</div>
+                <div id="soql-toolbar" style="display:none">
+                  <div class="soql-toggle-group">
+                    <label class="soql-toggle" title="Fetch all pages of results (handles >2000 records)">
+                      <input type="checkbox" id="soql-fetch-all" checked>
+                      <span>Fetch All</span>
+                    </label>
+                    <label class="soql-toggle" title="Include deleted and archived records (queryAll)">
+                      <input type="checkbox" id="soql-include-deleted">
+                      <span>Include Deleted</span>
+                    </label>
+                    <label class="soql-toggle" title="Use Tooling API instead of REST API">
+                      <input type="checkbox" id="soql-try-tooling">
+                      <span>Try Tooling</span>
+                    </label>
+                  </div>
+                </div>
+                <div id="utility-actions">
+                  <button id="run-util-btn" class="btn-primary enabled">
+                    ▶ RUN
+                  </button>
+                  <button id="soql-save-query-btn" class="btn-soql-save" title="Save Query" style="display:none">
+                    Save
+                  </button>
+                </div>
+              </div>
+
+              <!-- SOQL Action Strip (below header, above editor) -->
+              <div id="soql-action-strip" style="display:none">
+                <div class="soql-strip-left"></div>
+                <div class="soql-strip-right">
+                  <button id="soql-action-export-csv" class="soql-strip-btn" title="Export CSV">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+                  </button>
+                  <div id="soql-export-dropdown" class="soql-strip-dropdown">
+                    <button id="soql-action-export" class="soql-strip-btn" title="Export Results" aria-haspopup="menu" aria-expanded="false">
+                      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>
+                      <span class="soql-strip-caret">&#9662;</span>
+                    </button>
+                    <div id="soql-export-menu" class="soql-strip-menu" role="menu">
+                      <button class="soql-strip-menu-item" role="menuitem" data-format="excel">Copy to Clipboard (Excel)</button>
+                      <button class="soql-strip-menu-item" role="menuitem" data-format="csv">Copy to Clipboard (CSV)</button>
+                      <button class="soql-strip-menu-item" role="menuitem" data-format="json">Copy to Clipboard (JSON)</button>
+                    </div>
+                  </div>
+                  <span class="soql-strip-sep"></span>
+                  <button id="soql-action-recent" class="soql-strip-btn" title="Recent Queries">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 3.5a.5.5 0 0 0-1 0V8a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 7.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>
+                  </button>
+                  <button id="soql-action-saved" class="soql-strip-btn" title="Saved Queries">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9zM2.5 3a.5.5 0 0 0-.5.5V6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5zM14 7H2v5.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V7z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Apex Action Strip (below header, above editor) -->
+              <div id="apex-action-strip" style="display:none">
+                <div class="apex-strip-left">
+                  <span id="apex-execution-status" class="apex-strip-status"></span>
+                </div>
+                <div class="apex-strip-right">
+                  <button id="apex-action-clear" class="soql-strip-btn" title="Clear Results">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854z"/></svg>
+                  </button>
+                  <button id="apex-action-copy-log" class="soql-strip-btn" title="Copy Debug Log">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>
+                  </button>
+                  <span class="soql-strip-sep"></span>
+                  <button id="apex-action-history" class="soql-strip-btn" title="Execution History">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 3.5a.5.5 0 0 0-1 0V8a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 7.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Logs Action Strip -->
+              <div id="logs-action-strip" style="display:none">
+                <div class="logs-strip-left">
+                  <span id="logs-count-status" class="apex-strip-status"></span>
+                </div>
+                <div class="logs-strip-right">
+                  <button id="logs-action-refresh" class="soql-strip-btn" title="Refresh Logs">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M11.534 7h3.932a.25.25 0 01.192.41l-1.966 2.36a.25.25 0 01-.384 0l-1.966-2.36a.25.25 0 01.192-.41zm-11 2h3.932a.25.25 0 00.192-.41L2.692 6.23a.25.25 0 00-.384 0L.342 8.59A.25.25 0 00.534 9z"/><path d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 11-.771-.636A6.002 6.002 0 0114 8a.5.5 0 01-1 0 5 5 0 00-5-5zM2.5 7.5a.5.5 0 01.5.5 5 5 0 005 5c1.552 0 2.94-.707 3.857-1.818a.5.5 0 11.771.636A6.002 6.002 0 012 8a.5.5 0 01.5-.5z"/></svg>
+                  </button>
+                  <button id="logs-action-delete-all" class="soql-strip-btn" title="Delete All Logs">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H5.5l1-1h3l1 1H13a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div id="utility-body">
+                <!-- Scratchpad Monaco (Independent from editor) -->
+                <div id="utility-monaco-container" style="display: none">
+                  <iframe
+                    id="utility-iframe"
+                    src="editor.html"
+                    style="width: 100%; height: 100%; border: none"
+                  ></iframe>
+                  <div id="soql-editor-actions">
+                    <button id="soql-action-search" class="soql-action-btn" title="Find in Query (Ctrl+F)">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M15.25 14.19l-3.56-3.56A6.5 6.5 0 1 0 6.5 13a6.47 6.47 0 0 0 4.13-1.49l3.56 3.56a.75.75 0 1 0 1.06-1.06zM6.5 11.5a5 5 0 1 1 5-5 5 5 0 0 1-5 5z"/></svg>
+                    </button>
+                    <button id="soql-sidebar-copy" class="soql-action-btn" title="Copy Query to Clipboard">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>
+                    </button>
+                    <button id="soql-sidebar-prettify" class="soql-action-btn" title="Prettify Query">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v1H2zm0 3h8v1H2zm0 3h10v1H2zm0 3h6v1H2z"/></svg>
+                    </button>
+                  </div>
+                  <div id="apex-editor-actions">
+                    <button id="apex-action-search" class="soql-action-btn" title="Find in Code (Ctrl+F)">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M15.25 14.19l-3.56-3.56A6.5 6.5 0 1 0 6.5 13a6.47 6.47 0 0 0 4.13-1.49l3.56 3.56a.75.75 0 1 0 1.06-1.06zM6.5 11.5a5 5 0 1 1 5-5 5 5 0 0 1-5 5z"/></svg>
+                    </button>
+                    <button id="apex-sidebar-copy" class="soql-action-btn" title="Copy Code to Clipboard">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>
+                    </button>
+                    <button id="apex-sidebar-clear" class="soql-action-btn" title="Clear Editor">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H5.5l1-1h3l1 1H13a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <!-- Resizer for split view -->
+                <div
+                  id="utility-resizer"
+                  class="resizer-v"
+                  style="display: none"
+                ></div>
+                <!-- Results View (Logs/Tests/Query results) -->
+                <div id="utility-view-container" style="display: none"></div>
+              </div>
+            </div>
+
+            <!-- Schema Explorer Workspace -->
+            <div id="schema-workspace" class="workspace" style="display: none"></div>
+          </div>
+
+          <!-- Bottom Panel (Terminal & Problems) -->
+          <div id="bottom-panel" class="collapsed">
+            <div id="bottom-panel-header">
+              <div class="bottom-panel-tabs">
+                <button class="bottom-tab active" data-panel="terminal">
+                  TERMINAL
+                </button>
+                <button class="bottom-tab" data-panel="problems">
+                  PROBLEMS
+                  <span
+                    id="problem-count"
+                    class="badge-mini"
+                    style="display: none"
+                    >0</span
+                  >
+                </button>
+              </div>
+              <div class="actions">
+                <button
+                  id="clear-bottom-panel"
+                  class="btn-clear-util"
+                  title="Clear"
+                >
+                  CLEAR
+                </button>
+                <button id="toggle-bottom-panel" title="Collapse/Expand">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M7.646 4.646a.5.5 0 01.708 0l6 6a.5.5 0 01-.708.708L8 5.707l-5.646 5.647a.5.5 0 01-.708-.708l6-6z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div id="bottom-panel-content">
+              <div id="terminal-output" class="panel-content active">
+                <div id="terminal-log-container"></div>
+                <div
+                  id="terminal-sentinel"
+                  style="height: 1px; width: 100%; pointer-events: none"
+                ></div>
+              </div>
+              <div id="problems-panel" class="panel-content">
+                <table id="problems-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 20px">!</th>
+                      <th>File</th>
+                      <th style="width: 50px">Line</th>
+                      <th>Message</th>
+                    </tr>
+                  </thead>
+                  <tbody id="problems-list">
+                    <tr>
+                      <td
+                        colspan="4"
+                        style="text-align: center; padding: 20px; color: #666"
+                      >
+                        No problems found
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Bar (inside root) -->
+      <div id="status-bar" class="status-bar">
+        <!-- Left Section: Context -->
+        <div class="status-bar-left">
+          <div class="status-item" id="current-org">
+            <span class="org-icon"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.27 9.27 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5z"/></svg></span>
+            <span class="org-name">No Org</span>
+          </div>
+        </div>
+
+        <!-- Center Section: Background Tasks -->
+        <div class="status-bar-center">
+          <div
+            class="status-item status-task"
+            id="background-tasks"
+            style="display: none"
+          >
+            <span class="task-spinner"></span>
+            <span class="task-message">Loading...</span>
+          </div>
+        </div>
+
+        <!-- Right Section: System Controls -->
+        <div class="status-bar-right">
+          <!-- CLI/Engine Status (Hidden - SFintel Engine not yet available, see README) -->
+          <div class="status-item" id="cliStatus" title="SFintel Engine Status" style="display:none">
+            <span class="status-dot" style="background:#f39c12"></span> SFintel Engine: Connecting...
+          </div>
+
+          <!-- Report Issue -->
+          <div
+            class="status-item clickable"
+            id="report-issue-status"
+            title="Report an Issue"
+          >
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm9-3a1 1 0 11-2 0 1 1 0 012 0zM6.75 7.75a.75.75 0 000 1.5h.75v2h-.75a.75.75 0 000 1.5h3a.75.75 0 000-1.5H9V8.5a.75.75 0 00-.75-.75h-1.5z"/></svg>
+            <span>Report Issue</span>
+          </div>
+
+          <!-- Terminal Toggle -->
+          <div
+            class="status-item clickable"
+            id="terminal-toggle-status"
+            title="Toggle Terminal"
+          >
+            <span class="icon"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M6 9a.5.5 0 01.5-.5h3a.5.5 0 010 1h-3A.5.5 0 016 9zM3.854 4.146a.5.5 0 10-.708.708L5.293 7l-2.147 2.146a.5.5 0 00.708.708l2.5-2.5a.5.5 0 000-.708l-2.5-2.5z"/><path d="M2 1a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V3a2 2 0 00-2-2H2zm12 1a1 1 0 011 1v10a1 1 0 01-1 1H2a1 1 0 01-1-1V3a1 1 0 011-1h12z"/></svg></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved Queries Slide-in Panel -->
+    <div id="soql-saved-panel" class="soql-queries-panel">
+      <div class="soql-queries-panel-header">
+        <span class="soql-queries-panel-title">Saved Queries</span>
+        <span class="soql-queries-panel-info" title="Queries are stored in your browser's local storage">&#9432;</span>
+        <button id="soql-saved-panel-close" class="soql-queries-panel-close" title="Close">&times;</button>
+      </div>
+      <div class="soql-queries-panel-search">
+        <input type="text" id="soql-saved-search" placeholder="Filter saved queries..." />
+      </div>
+      <div id="soql-saved-list" class="soql-queries-panel-list">
+        <div class="soql-queries-empty">No saved queries yet</div>
+      </div>
+    </div>
+
+    <!-- Recent Queries Slide-in Panel -->
+    <div id="soql-recent-panel" class="soql-queries-panel">
+      <div class="soql-queries-panel-header">
+        <span class="soql-queries-panel-title">Recent Queries</span>
+        <button id="soql-recent-panel-close" class="soql-queries-panel-close" title="Close">&times;</button>
+      </div>
+      <div id="soql-recent-list" class="soql-queries-panel-list">
+        <div class="soql-queries-empty">No recent queries</div>
+      </div>
+    </div>
+
+    <!-- Apex Execution History Slide-in Panel -->
+    <div id="apex-history-panel" class="soql-queries-panel">
+      <div class="soql-queries-panel-header">
+        <span class="soql-queries-panel-title">Execution History</span>
+        <button id="apex-history-panel-close" class="soql-queries-panel-close" title="Close">&times;</button>
+      </div>
+      <div id="apex-history-list" class="soql-queries-panel-list">
+        <div class="soql-queries-empty">No executions yet</div>
+      </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none">
+      <!-- Apex Class Modal -->
+      <div id="new-apex-modal" class="modal-content" style="display: none">
+        <div class="modal-header">CREATE APEX CLASS</div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Class Name <span class="required">*</span></label>
+            <input
+              type="text"
+              id="apex-name"
+              placeholder="e.g. MyController"
+              autofocus
+            />
+            <div class="error-msg" id="apex-name-error"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Sharing Model</label>
+              <select id="apex-sharing">
+                <option value="with sharing">with sharing</option>
+                <option value="without sharing">without sharing</option>
+                <option value="inherited sharing">inherited sharing</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Related SObject (Optional)</label>
+              <input type="text" id="apex-sobject" placeholder="e.g. Account" />
+            </div>
+          </div>
+          <div style="margin-top: 10px; color: #888; font-size: 11px">
+            Providing an SObject will generate a standard handler method
+            signature.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="sf-btn secondary" id="apex-cancel">CANCEL</button>
+          <button class="sf-btn primary" id="apex-create" disabled>
+            CREATE
+          </button>
+        </div>
+      </div>
+
+      <!-- Trigger Modal -->
+      <div id="new-trigger-modal" class="modal-content" style="display: none">
+        <div class="modal-header">CREATE APEX TRIGGER</div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Trigger Name <span class="required">*</span></label>
+            <input
+              type="text"
+              id="trigger-name"
+              placeholder="e.g. AccountTrigger"
+            />
+            <!-- Compiler Errors Display Panel -->
+            <div
+              class="compiler-errors"
+              id="trigger-compiler-errors"
+              style="
+                display: none;
+                margin-top: 10px;
+                padding: 12px;
+                background: rgba(255, 59, 48, 0.1);
+                border-left: 3px solid #ff3b30;
+                border-radius: 4px;
+                font-size: 12px;
+                font-family: &quot;Cascadia Code&quot;, monospace;
+              "
+            >
+              <div
+                style="
+                  font-weight: 600;
+                  color: #ff3b30;
+                  margin-bottom: 8px;
+                  display: flex;
+                  align-items: center;
+                "
+              >
+                <span style="margin-right: 6px">❌</span>
+                <span id="trigger-error-count"></span>
+              </div>
+              <div
+                id="trigger-error-list"
+                style="max-height: 200px; overflow-y: auto; color: #e0e0e0"
+              ></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>SObject <span class="required">*</span></label>
+            <input
+              type="text"
+              id="trigger-sobject"
+              placeholder="e.g. Account"
+            />
+          </div>
+          <div class="form-group">
+            <label>Trigger Event <span class="required">*</span></label>
+            <div style="font-size: 11px; color: #888; margin-bottom: 8px">
+              Select one event. Additional events can be added in the editor
+              later.
+            </div>
+            <div class="sf-checkbox-grid">
+              <label
+                ><input
+                  type="radio"
+                  name="trigger-event"
+                  class="trigger-event"
+                  value="before insert"
+                  checked
+                />
+                before insert</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="trigger-event"
+                  class="trigger-event"
+                  value="before update"
+                />
+                before update</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="trigger-event"
+                  class="trigger-event"
+                  value="before delete"
+                />
+                before delete</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="trigger-event"
+                  class="trigger-event"
+                  value="after insert"
+                />
+                after insert</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="trigger-event"
+                  class="trigger-event"
+                  value="after update"
+                />
+                after update</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="trigger-event"
+                  class="trigger-event"
+                  value="after delete"
+                />
+                after delete</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="trigger-event"
+                  class="trigger-event"
+                  value="after undelete"
+                />
+                after undelete</label
+              >
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="sf-btn secondary" id="trigger-cancel">CANCEL</button>
+          <button class="sf-btn primary" id="trigger-create" disabled>
+            CREATE
+          </button>
+        </div>
+      </div>
+
+      <div id="new-aura-modal" class="modal-content" style="display: none">
+        <div class="modal-header">CREATE AURA COMPONENT</div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Component Name <span class="required">*</span></label>
+            <input
+              type="text"
+              id="aura-name"
+              placeholder="e.g. myAuraComponent"
+            />
+            <div class="error-msg" id="aura-name-error"></div>
+          </div>
+          <div style="margin-top: 10px; color: #888; font-size: 11px">
+            This will create a complete Aura Bundle including .cmp, controller,
+            helper, CSS, and metadata.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="sf-btn secondary" id="aura-cancel">CANCEL</button>
+          <button class="sf-btn primary" id="aura-create" disabled>
+            CREATE
+          </button>
+        </div>
+      </div>
+
+      <!-- LWC Modal -->
+      <div id="new-lwc-modal" class="modal-content" style="display: none">
+        <div class="modal-header">CREATE LIGHTNING WEB COMPONENT</div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Component Name <span class="required">*</span></label>
+            <input
+              type="text"
+              id="lwc-name"
+              placeholder="e.g. contactList"
+              autofocus
+            />
+            <!-- Compiler Errors Display Panel -->
+            <div
+              class="compiler-errors"
+              id="lwc-compiler-errors"
+              style="
+                display: none;
+                margin-top: 10px;
+                padding: 12px;
+                background: rgba(255, 59, 48, 0.1);
+                border-left: 3px solid #ff3b30;
+                border-radius: 4px;
+                font-size: 12px;
+                font-family: &quot;Cascadia Code&quot;, monospace;
+              "
+            >
+              <div
+                style="
+                  font-weight: 600;
+                  color: #ff3b30;
+                  margin-bottom: 8px;
+                  display: flex;
+                  align-items: center;
+                "
+              >
+                <span style="margin-right: 6px">❌</span>
+                <span id="lwc-error-count"></span>
+              </div>
+              <div
+                id="lwc-error-list"
+                style="max-height: 200px; overflow-y: auto; color: #e0e0e0"
+              ></div>
+            </div>
+          </div>
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="lwc-exposed" checked />
+            <label for="lwc-exposed">Exposed to Lightning App Builder</label>
+          </div>
+          <div id="lwc-targets-section">
+            <label>Target Pages (Required if exposed)</label>
+            <div
+              id="lwc-target-error"
+              class="error-msg"
+              style="
+                display: none;
+                color: #ff3b30;
+                font-size: 11px;
+                margin-top: 4px;
+                margin-bottom: 8px;
+              "
+            >
+              At least one target page is required when the component is
+              exposed.
+            </div>
+            <div class="sf-checkbox-grid">
+              <label
+                ><input
+                  type="checkbox"
+                  class="lwc-target"
+                  value="lightning__AppPage"
+                  checked
+                />
+                App Page</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  class="lwc-target"
+                  value="lightning__RecordPage"
+                  checked
+                />
+                Record Page</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  class="lwc-target"
+                  value="lightning__HomePage"
+                  checked
+                />
+                Home Page</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  class="lwc-target"
+                  value="lightning__FlowScreen"
+                />
+                Flow Screen</label
+              >
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>API Version</label>
+              <input type="text" id="lwc-api" value="59.0" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="sf-btn secondary" id="lwc-cancel">CANCEL</button>
+          <button class="sf-btn primary" id="lwc-create" disabled>
+            CREATE
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <link rel="stylesheet" href="../src/utility-window/theme.css" />
+    <style>
+      /* ========== STATUS BAR ========== */
+      .status-bar {
+        height: 26px;
+        background: #1e1e1e;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 10px;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.7);
+        flex-shrink: 0;
+        z-index: 100;
+      }
+
+      .status-bar-left,
+      .status-bar-center,
+      .status-bar-right {
+        display: flex;
+        align-items: center;
+        gap: 0;
+      }
+
+      .status-bar .status-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 0;
+        transition: background 0.12s ease;
+        user-select: none;
+        font-size: 11px;
+        height: 100%;
+      }
+
+      .status-bar .status-item.clickable {
+        cursor: pointer;
+      }
+
+      .status-bar .status-item.clickable:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      /* Org Name */
+      .status-bar #current-org {
+        font-weight: 500;
+      }
+
+      .status-bar .org-icon {
+        font-size: 12px;
+      }
+
+      .status-bar .org-name {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      /* Background Tasks */
+      .status-bar .status-task {
+        color: #f39c12;
+      }
+
+      .status-bar .task-spinner {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border: 2px solid rgba(243, 156, 18, 0.3);
+        border-top-color: #f39c12;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* CLI Status in Status Bar */
+      .status-bar .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #95a5a6;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+      }
+
+      .status-bar #cli-status.connected .status-dot {
+        background: #2ecc71;
+        box-shadow: 0 0 6px rgba(46, 204, 113, 0.5);
+      }
+
+      .status-bar #cli-status.disconnected .status-dot {
+        background: #e74c3c;
+      }
+
+      .status-bar #cli-status.checking .status-dot {
+        background: #f39c12;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      .status-bar #cli-status .status-text {
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .status-bar #cli-status.connected .status-text {
+        color: #2ecc71;
+      }
+
+      .status-bar #cli-status.disconnected .status-text {
+        color: rgba(255, 255, 255, 0.35);
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(0.85);
+        }
+      }
+
+      /* Icons in Status Bar */
+      .status-bar .icon {
+        font-size: 13px;
+        opacity: 0.7;
+      }
+
+      .status-bar .clickable:hover .icon {
+        opacity: 1;
+      }
+
+      /* ========== UTILITY OVERLAY STYLES ========== */
+
+      /* Utility Overlay Polished Styles */
+
+      /* Close Button */
+      .utility-overlay .close-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: none;
+        border-radius: 4px;
+        background: transparent;
+        color: var(--text-secondary, #888);
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        transition: all 100ms ease;
+        flex-shrink: 0;
+      }
+
+      .utility-overlay .close-button:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-primary, #ccc);
+      }
+
+      .utility-overlay .close-button:active {
+        transform: scale(0.95);
+      }
+
+      /* Title Bar */
+      .utility-overlay .utility-title-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: #1e1e1e;
+      }
+
+      .utility-overlay .title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: 0.3px;
+      }
+
+      .utility-overlay .subtitle {
+        margin: 4px 0 0 0;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 400;
+      }
+
+      /* Deploy Body */
+      .staged-deploy-utility {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .staged-deploy-utility .deploy-body {
+        flex: 1;
+        overflow: auto;
+        padding: 24px;
+        background: #1e1e1e;
+      }
+
+      /* Org Selector */
+      .staged-deploy-utility .org-selector-section {
+        margin-bottom: 32px;
+      }
+
+      .staged-deploy-utility .input-label {
+        display: block;
+        font-size: 10px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+      }
+
+      .staged-deploy-utility .utility-input {
+        width: 100%;
+        max-width: 500px;
+        padding: 10px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        background: #252526;
+        color: #ccc;
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 150ms ease;
+      }
+
+      .staged-deploy-utility .utility-input:focus {
+        border-color: #0e639c;
+      }
+
+      /* File List Section */
+      .staged-deploy-utility .file-list-section {
+        flex: 1;
+      }
+
+      .staged-deploy-utility .file-list {
+        background: #252526;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .staged-deploy-utility .file-list-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: #2d2d30;
+      }
+
+      .staged-deploy-utility .file-count {
+        font-size: 10px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+
+      .staged-deploy-utility .utility-button-small {
+        padding: 6px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 3px;
+        background: transparent;
+        color: #ccc;
+        font-size: 11px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 100ms ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .staged-deploy-utility .utility-button-small:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .staged-deploy-utility .file-items {
+        max-height: 450px;
+        min-height: 200px;
+        overflow: auto;
+      }
+
+      .staged-deploy-utility .file-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        cursor: pointer;
+        transition: background 80ms ease;
+      }
+
+      .staged-deploy-utility .file-item:last-child {
+        border-bottom: none;
+      }
+
+      .staged-deploy-utility .file-item:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .staged-deploy-utility .file-item input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        cursor: pointer;
+        accent-color: #0e639c;
+      }
+
+      .staged-deploy-utility .file-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .staged-deploy-utility .file-path {
+        font-size: 13px;
+        font-weight: 500;
+        color: #e0e0e0;
+        font-family: "Monaco", "Menlo", "Consolas", monospace;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .staged-deploy-utility .file-type {
+        font-size: 10px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.35);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* Empty State */
+      .staged-deploy-utility .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 24px;
+        text-align: center;
+      }
+
+      .staged-deploy-utility .empty-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.3;
+      }
+
+      .staged-deploy-utility .empty-text {
+        margin: 0 0 8px 0;
+        font-size: 15px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .staged-deploy-utility .empty-hint {
+        margin: 0;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.35);
+        max-width: 300px;
+        line-height: 1.6;
+      }
+
+      /* Deploy Actions */
+      .staged-deploy-utility .deploy-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 18px 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        background: #1e1e1e;
+      }
+
+      .staged-deploy-utility .utility-button {
+        padding: 9px 18px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 4px;
+        background: transparent;
+        color: #ccc;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 100ms ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        min-width: 90px;
+      }
+
+      .staged-deploy-utility .utility-button:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .staged-deploy-utility .utility-button.primary {
+        background: #0e639c;
+        border-color: #0e639c;
+        color: white;
+      }
+
+      .staged-deploy-utility .utility-button.primary:hover {
+        background: #1177bb;
+        border-color: #1177bb;
+      }
+
+      .staged-deploy-utility .utility-button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      .staged-deploy-utility .utility-button:active {
+        transform: translateY(1px);
+      }
+
+      /* ========== WIZARD MULTI-STEP STYLES ========== */
+
+      /* Step Progress Indicator */
+      .deployment-stepper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        padding: 24px 48px 16px 48px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: #1a1a1a;
+      }
+
+      .deployment-stepper .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        flex: 1;
+        max-width: 120px;
+      }
+
+      .deployment-stepper .step:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        top: 16px;
+        left: calc(50% + 28px);
+        width: calc(100% - 16px);
+        height: 2px;
+        background: rgba(255, 255, 255, 0.1);
+        z-index: 0;
+      }
+
+      .deployment-stepper .step.completed:not(:last-child)::after {
+        background: #2ecc71;
+      }
+
+      .deployment-stepper .step-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 13px;
+        font-weight: 700;
+        border: 2px solid transparent;
+        transition: all 200ms ease;
+        position: relative;
+        z-index: 1;
+      }
+
+      .deployment-stepper .step.active .step-number {
+        background: #0e639c;
+        color: white;
+        border-color: #1177bb;
+        box-shadow: 0 0 0 3px rgba(14, 99, 156, 0.2);
+      }
+
+      .deployment-stepper .step.completed .step-number {
+        background: #2ecc71;
+        color: white;
+        border-color: #27ae60;
+      }
+
+      .deployment-stepper .step-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.35);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        text-align: center;
+      }
+
+      .deployment-stepper .step.active .step-label {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .deployment-stepper .step.completed .step-label {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      /* Wizard Step Content Layout */
+      .wizard-step-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+      }
+
+      .wizard-step-content .step-header {
+        padding: 32px 48px 24px 48px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .wizard-step-content .step-title {
+        margin: 0 0 8px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: 0.3px;
+      }
+
+      .wizard-step-content .step-description {
+        margin: 0;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .wizard-step-content .step-body {
+        flex: 1;
+        overflow: auto;
+        padding: 32px 48px;
+      }
+
+      .wizard-step-content .step-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 48px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        background: #1a1a1a;
+      }
+
+      .wizard-step-content .footer-left .selection-count {
+        font-size: 12px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .wizard-step-content .footer-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      /* Search Box */
+      .search-box {
+        margin-bottom: 24px;
+      }
+
+      .metadata-search-input {
+        width: 100%;
+        max-width: 400px;
+        padding: 12px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        background: #252526;
+        color: #e0e0e0;
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 150ms ease;
+      }
+
+      .metadata-search-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .metadata-search-input:focus {
+        border-color: #0e639c;
+        box-shadow: 0 0 0 3px rgba(14, 99, 156, 0.15);
+      }
+
+      /* Metadata Type Grid */
+      .metadata-type-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+      }
+
+      .metadata-type-card {
+        position: relative;
+        display: block;
+        padding: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        background: #252526;
+        cursor: pointer;
+        transition: all 150ms ease;
+      }
+
+      .metadata-type-card:hover {
+        border-color: rgba(255, 255, 255, 0.15);
+        background: #2d2d30;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .metadata-type-card input[type="checkbox"] {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #0e639c;
+      }
+
+      .metadata-type-card input[type="checkbox"]:checked ~ .card-content {
+        opacity: 1;
+      }
+
+      .metadata-type-card.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      .metadata-type-card .card-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        opacity: 0.7;
+        transition: opacity 150ms ease;
+      }
+
+      .metadata-type-card:hover .card-content {
+        opacity: 1;
+      }
+
+      .metadata-type-card .card-icon {
+        font-size: 28px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+
+      .metadata-type-card .card-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .metadata-type-card .card-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #e0e0e0;
+        margin-bottom: 4px;
+      }
+
+      .metadata-type-card .card-api-name {
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.35);
+        font-family: "Monaco", "Menlo", "Consolas", monospace;
+      }
+
+      .metadata-type-card .card-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+      }
+
+      .metadata-type-card .category-badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        background: rgba(14, 99, 156, 0.15);
+        color: #4da6ff;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .metadata-type-card .count-badge {
+        font-size: 12px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      /* Selected State */
+      .metadata-type-card:has(input:checked) {
+        border-color: #0e639c;
+        background: rgba(14, 99, 156, 0.08);
+      }
+
+      .metadata-type-card:has(input:checked) .card-content {
+        opacity: 1;
+      }
+
+      .metadata-type-card:has(input:checked) .card-name {
+        color: #fff;
+      }
+
+      /* ========== STEP 2: COMPONENT SELECTION ========== */
+
+      /* Filter Chips */
+      .filter-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+
+      .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
+        border-radius: 16px;
+        background: rgba(14, 99, 156, 0.15);
+        border: 1px solid rgba(14, 99, 156, 0.3);
+        color: #4da6ff;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* Component Controls */
+      .skeleton {
+        position: relative;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        pointer-events: none;
+      }
+
+      .skeleton::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+        background-image: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0) 0,
+          rgba(255, 255, 255, 0.05) 20%,
+          rgba(255, 255, 255, 0.1) 60%,
+          rgba(255, 255, 255, 0)
+        );
+        animation: skeleton-shimmer 2s infinite;
+      }
+
+      @keyframes skeleton-shimmer {
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .skeleton-line {
+        height: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        margin-bottom: 8px;
+      }
+
+      .skeleton-line.title {
+        width: 60%;
+        height: 14px;
+      }
+      .skeleton-line.detail {
+        width: 40%;
+        height: 10px;
+      }
+
+      .skeleton-search {
+        height: 38px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 4px;
+        margin-bottom: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* Progress States */
+      .type-count.loading {
+        color: rgba(255, 255, 255, 0.3);
+        font-style: italic;
+      }
+
+      .metadata-type-card.no-components {
+        opacity: 0.5;
+        filter: grayscale(1);
+      }
+
+      .metadata-type-card.disabled {
+        cursor: not-allowed;
+      }
+
+      /* Component Controls */
+      .component-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .component-controls .metadata-search-input {
+        flex: 1;
+        max-width: 500px;
+      }
+
+      .bulk-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      /* Components List */
+      .components-list {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        background: #252526;
+        max-height: 450px;
+        overflow-y: auto;
+      }
+
+      .component-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        cursor: pointer;
+        transition: background 80ms ease;
+      }
+
+      .component-item:last-child {
+        border-bottom: none;
+      }
+
+      .component-item:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .component-item input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        cursor: pointer;
+        accent-color: #0e639c;
+        flex-shrink: 0;
+      }
+
+      .component-item .component-info {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .component-item .component-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: #e0e0e0;
+        font-family: "Monaco", "Menlo", "Consolas", monospace;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .component-item .component-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .component-item .component-type-badge {
+        padding: 3px 8px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+
+      .component-item:has(input:checked) {
+        background: rgba(14, 99, 156, 0.08);
+      }
+
+      .component-item:has(input:checked) .component-name {
+        color: #fff;
+      }
+
+      .component-item:has(input:checked) .component-type-badge {
+        background: rgba(14, 99, 156, 0.2);
+        color: #4da6ff;
+      }
+
+      /* ========== STEP 3: REVIEW & VALIDATE ========== */
+
+      /* Review Summary Card */
+      .review-summary-card {
+        background: #252526;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 32px;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .summary-row:last-child {
+        border-bottom: none;
+      }
+
+      .summary-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .summary-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: #e0e0e0;
+        font-family: "Monaco", "Menlo", "Consolas", monospace;
+      }
+
+      /* Section Titles */
+      .section-title {
+        margin: 0 0 16px 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* Component Groups */
+      .component-groups {
+        margin-bottom: 32px;
+      }
+
+      .component-group {
+        background: #252526;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        margin-bottom: 12px;
+        overflow: hidden;
+      }
+
+      .component-group .group-header {
+        padding: 12px 18px;
+        background: #2d2d30;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .component-group .group-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .component-group .group-components {
+        padding: 8px 0;
+      }
+
+      .review-component-item {
+        padding: 8px 18px;
+        display: flex;
+        align-items: center;
+      }
+
+      .review-component-item .component-name {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        font-family: "Monaco", "Menlo", "Consolas", monospace;
+      }
+
+      /* Test Options & Deployment Mode */
+      .test-options,
+      .deployment-mode {
+        margin-bottom: 24px;
+      }
+
+      .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .radio-option,
+      .checkbox-option {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        background: #252526;
+        cursor: pointer;
+        transition: all 150ms ease;
+      }
+
+      .radio-option:hover,
+      .checkbox-option:hover {
+        border-color: rgba(255, 255, 255, 0.15);
+        background: #2d2d30;
+      }
+
+      .radio-option input[type="radio"],
+      .checkbox-option input[type="checkbox"] {
+        margin-top: 2px;
+        cursor: pointer;
+        accent-color: #0e639c;
+        flex-shrink: 0;
+      }
+
+      .radio-label,
+      .checkbox-label {
+        flex: 1;
+      }
+
+      .radio-title,
+      .checkbox-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #e0e0e0;
+        margin-bottom: 4px;
+      }
+
+      .radio-desc,
+      .checkbox-desc {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.4);
+        line-height: 1.5;
+      }
+
+      .deploy-warning {
+        font-size: 12px;
+        font-weight: 600;
+        color: #f39c12;
+      }
+
+      /* ========== STEP 4: DEPLOYMENT PROGRESS & SUCCESS ========== */
+
+      /* Deployment Progress */
+      .deployment-progress {
+        display: flex;
+        justify-content: center;
+        padding: 60px 24px;
+      }
+
+      .progress-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        max-width: 400px;
+        width: 100%;
+      }
+
+      .progress-step {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        border-radius: 8px;
+        background: #252526;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        transition: all 200ms ease;
+      }
+
+      .progress-step.active {
+        border-color: #0e639c;
+        background: rgba(14, 99, 156, 0.08);
+      }
+
+      .progress-step.completed {
+        border-color: rgba(46, 204, 113, 0.3);
+        background: rgba(46, 204, 113, 0.05);
+      }
+
+      .progress-step .progress-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      .progress-step .progress-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .progress-step.active .progress-label {
+        color: #4da6ff;
+      }
+
+      .progress-step.completed .progress-label {
+        color: rgba(46, 204, 113, 0.9);
+      }
+
+      /* Deployment Success */
+      .deployment-success {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 24px;
+        text-align: center;
+      }
+
+      .deployment-success .success-icon {
+        font-size: 64px;
+        margin-bottom: 24px;
+      }
+
+      .deployment-success .success-message h3 {
+        margin: 0 0 12px 0;
+        font-size: 24px;
+        font-weight: 600;
+        color: #2ecc71;
+      }
+
+      .deployment-success .success-message p {
+        margin: 0;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        max-width: 400px;
+      }
+
+      /* Deployment Error */
+      .deployment-error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 24px;
+        text-align: center;
+      }
+
+      .deployment-error .error-icon {
+        font-size: 64px;
+        margin-bottom: 24px;
+      }
+
+      .deployment-error .error-message h3 {
+        margin: 0 0 12px 0;
+        font-size: 24px;
+        font-weight: 600;
+        color: #e74c3c;
+      }
+
+      .deployment-error .error-message p {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        max-width: 400px;
+      }
+
+      .deployment-error .error-hint {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+        font-style: italic;
+      }
+
+      .progress-step.failed {
+        border-color: rgba(231, 76, 60, 0.3);
+        background: rgba(231, 76, 60, 0.05);
+      }
+
+      .progress-step.failed .progress-label {
+        color: rgba(231, 76, 60, 0.9);
+      }
+
+      .warning-text {
+        color: #f39c12 !important;
+        font-weight: 600;
+        margin-top: 12px !important;
+      }
+    </style>
+
+    <!-- P2 Security: shared HTML escape utility -->
+    <!-- P2 Security: shared HTML escape utility -->
+    <script src="lib/security.js"></script>
+
+    <!-- Scripts -->
+    <script src="lib/jszip.min.js"></script>
+    <script src="lib/utils.js"></script>
+    <script src="lib/salesforce-api.js"></script>
+    <script src="lib/record-api.js"></script>
+    <script src="lib/workflow-api.js"></script>
+    <script src="lib/api-client.js"></script>
+    <script src="log-parser.js"></script>
+    <script src="modules/terminal.js"></script>
+    <script src="modules/metadata-explorer.js"></script>
+    <script src="modules/test-runner.js"></script>
+    <script src="modules/schema-cache.js"></script>
+    <script src="modules/schema-explorer.js"></script>
+    <script src="modules/soql-parser.js"></script>
+    <script src="modules/soql-autocomplete.js"></script>
+    <script src="modules/utils-panel.js"></script>
+    <script src="modules/record-inspector.js"></script>
+    <script src="modules/workflow-emulator.js"></script>
+    <script src="modules/deployment-executor.js"></script>
+    <script src="modules/environment.js"></script>
+    <script src="modules/native-bridge.js"></script>
+    <script src="modules/connection-manager.js"></script>
+    <script src="modules/status-manager.js"></script>
+    <script src="modules/cli-bridge.js"></script>
+    <script src="modules/utility-window-bridge.js"></script>
+    <script src="lib/d3.v7.min.js"></script>
+    <script src="lib/chart.min.js"></script>
+    <script src="modules/reports-viewer.js"></script>
+    <script src="modules/analysis-panel.js"></script>
+    <script src="modules/fetch-latest.js"></script>
+    <script src="modules/fetch-latest-ui.js"></script>
+    <script src="modules/flow-analysis.js"></script>
+    <script src="modules/automation-inspector-flow.js"></script>
+    <script src="modules/automation-inspector.js"></script>
+    <script src="modules/saved-queries.js"></script>
+    <script src="modules/org-environment.js"></script>
+    <script src="ide.js"></script>
+  </body>
+</html>

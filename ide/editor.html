@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: #1e1e1e;
+        }
+
+        #monaco-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- APEX CODE COVERAGE (v2.3.0) --- */
+        .coverage-line-covered {
+            background-color: rgba(46, 204, 113, 0.05) !important;
+        }
+
+        .coverage-gutter-covered {
+            background-color: #27ae60 !important;
+            width: 4px !important;
+            transition: opacity 0.2s ease;
+        }
+
+        .coverage-line-uncovered {
+            background-color: rgba(231, 76, 60, 0.05) !important;
+        }
+
+        .coverage-gutter-uncovered {
+            background-color: #e74c3c !important;
+            width: 4px !important;
+            transition: opacity 0.2s ease;
+        }
+
+        .coverage-hidden .coverage-gutter-covered,
+        .coverage-hidden .coverage-gutter-uncovered,
+        .coverage-hidden .coverage-line-covered,
+        .coverage-hidden .coverage-line-uncovered {
+            opacity: 0 !important;
+        }
+
+        /* Fix suggest widget rendering in iframe - ensure proper height */
+        .monaco-editor .suggest-widget {
+            max-height: 300px !important;
+        }
+        .monaco-editor .suggest-widget .monaco-list .monaco-list-rows {
+            max-height: 280px !important;
+        }
+
+        /* ========== ENTERPRISE DIFF VIEWER ========== */
+
+        /* --- Overlay Container + VS Code diff color variables (Monaco 0.45+) --- */
+        #diff-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            background: #1e1e1e;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+            /* Diff decoration colors (Monaco uses CSS custom properties) */
+            --vscode-diffEditor-insertedTextBackground: rgba(35, 134, 54, 0.2);
+            --vscode-diffEditor-removedTextBackground: rgba(206, 49, 49, 0.2);
+            --vscode-diffEditor-insertedLineBackground: rgba(35, 134, 54, 0.2);
+            --vscode-diffEditor-removedLineBackground: rgba(206, 49, 49, 0.2);
+            --vscode-diffEditorGutter-insertedLineBackground: rgba(35, 134, 54, 0.35);
+            --vscode-diffEditorGutter-removedLineBackground: rgba(206, 49, 49, 0.35);
+            --vscode-diffEditor-insertedTextBorder: transparent;
+            --vscode-diffEditor-removedTextBorder: transparent;
+            --vscode-diffEditorOverview-insertedForeground: #28a745;
+            --vscode-diffEditorOverview-removedForeground: #dc3545;
+        }
+
+        /* --- Metadata Header --- */
+        .diff-metadata-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            background: #252526;
+            border-bottom: 1px solid #333;
+            flex-shrink: 0;
+            min-height: 38px;
+        }
+
+        .diff-meta-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .diff-type-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .diff-file-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #e0e0e0;
+        }
+
+        .diff-direction-label {
+            font-size: 11px;
+            color: #666;
+            padding-left: 4px;
+        }
+
+        .diff-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .diff-badge-new {
+            background: rgba(40, 167, 69, 0.15);
+            color: #4ec9b0;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .diff-badge-deleted {
+            background: rgba(220, 53, 69, 0.15);
+            color: #f48771;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .diff-badge-error {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ffb74d;
+            border: 1px solid rgba(255, 152, 0, 0.3);
+        }
+
+        .diff-meta-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .diff-meta-detail {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .diff-change-stats {
+            font-size: 11px;
+            font-family: "Consolas", "Monaco", monospace;
+        }
+
+        .diff-stat-add {
+            color: #4ec9b0;
+            font-weight: 600;
+        }
+
+        .diff-stat-remove {
+            color: #f48771;
+            font-weight: 600;
+        }
+
+        .diff-stat-identical {
+            color: #666;
+            font-style: italic;
+        }
+
+        /* --- Toolbar --- */
+        .diff-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 3px 12px;
+            background: #2d2d2d;
+            border-bottom: 1px solid #333;
+            flex-shrink: 0;
+            min-height: 30px;
+        }
+
+        .diff-toolbar-left,
+        .diff-toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .diff-toolbar-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: transparent;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            transition: background 0.12s, color 0.12s;
+            white-space: nowrap;
+        }
+
+        .diff-toolbar-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #e0e0e0;
+        }
+
+        .diff-toolbar-btn.active {
+            color: #4facfe;
+            background: rgba(79, 172, 254, 0.08);
+        }
+
+        .diff-toolbar-btn.active:hover {
+            background: rgba(79, 172, 254, 0.14);
+        }
+
+        .diff-toolbar-btn.diff-close-btn:hover {
+            background: rgba(220, 53, 69, 0.15);
+            color: #f48771;
+        }
+
+        .diff-toolbar-btn svg {
+            flex-shrink: 0;
+        }
+
+        .diff-btn-label {
+            font-size: 11px;
+        }
+
+        .diff-toolbar-divider {
+            width: 1px;
+            height: 16px;
+            background: #444;
+            margin: 0 6px;
+            flex-shrink: 0;
+        }
+
+        /* --- Quick Actions Strip --- */
+        .diff-actions-strip {
+            display: flex;
+            align-items: center;
+            padding: 5px 16px;
+            background: #1e1e1e;
+            border-bottom: 1px solid #333;
+            flex-shrink: 0;
+            gap: 6px;
+        }
+
+        .diff-actions-spacer {
+            flex: 1;
+        }
+
+        .diff-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            background: transparent;
+            border: 1px solid #444;
+            color: #ccc;
+            white-space: nowrap;
+        }
+
+        .diff-action-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #666;
+        }
+
+        .diff-action-btn.apply {
+            border-color: #444;
+            color: #666;
+            font-weight: 600;
+            opacity: 0.5;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .diff-action-btn.apply.enabled {
+            opacity: 1;
+            pointer-events: auto;
+            border-color: #4ec9b0;
+            color: #fff;
+            background: rgba(40, 167, 69, 0.25);
+            animation: applyPulse 1.5s ease-in-out;
+        }
+
+        .diff-action-btn.apply.enabled:hover {
+            background: rgba(40, 167, 69, 0.4);
+            border-color: #5fd9bf;
+        }
+
+        @keyframes applyPulse {
+            0%, 100% { box-shadow: none; }
+            50% { box-shadow: 0 0 8px rgba(78, 201, 176, 0.5); }
+        }
+
+        .diff-actions-divider {
+            width: 1px;
+            height: 18px;
+            background: #444;
+            margin: 0 4px;
+            align-self: center;
+        }
+
+        .diff-action-btn.deploy {
+            border-color: rgba(79, 172, 254, 0.4);
+            color: #4facfe;
+        }
+
+        .diff-action-btn.deploy:hover {
+            background: rgba(79, 172, 254, 0.1);
+            border-color: #4facfe;
+        }
+
+        .diff-action-btn.retrieve {
+            border-color: rgba(255, 159, 67, 0.4);
+            color: #ff9f43;
+        }
+
+        .diff-action-btn.retrieve:hover {
+            background: rgba(255, 159, 67, 0.1);
+            border-color: #ff9f43;
+        }
+
+        .diff-action-btn.flash {
+            background: rgba(40, 167, 69, 0.2) !important;
+            border-color: #4ec9b0 !important;
+            color: #4ec9b0 !important;
+        }
+
+        .diff-action-btn svg {
+            flex-shrink: 0;
+        }
+
+        /* --- Diff Editor Container --- */
+        #diff-editor-container {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- Diff Decoration Overrides (CSS variable approach for Monaco native diff) --- */
+
+        /* Line backgrounds */
+        #diff-overlay .monaco-editor .line-insert,
+        #diff-overlay .monaco-diff-editor .line-insert {
+            background-color: rgba(44, 190, 78, 0.22) !important;
+        }
+        #diff-overlay .monaco-editor .line-delete,
+        #diff-overlay .monaco-diff-editor .line-delete {
+            background-color: rgba(248, 81, 73, 0.22) !important;
+        }
+
+        /* Gutter backgrounds */
+        #diff-overlay .monaco-editor .gutter-insert,
+        #diff-overlay .monaco-diff-editor .gutter-insert {
+            background-color: rgba(44, 190, 78, 0.35) !important;
+        }
+        #diff-overlay .monaco-editor .gutter-delete,
+        #diff-overlay .monaco-diff-editor .gutter-delete {
+            background-color: rgba(248, 81, 73, 0.35) !important;
+        }
+
+        /* Char-level inline diffs */
+        #diff-overlay .monaco-editor .char-insert,
+        #diff-overlay .monaco-diff-editor .char-insert {
+            background-color: rgba(44, 190, 78, 0.4) !important;
+        }
+        #diff-overlay .monaco-editor .char-delete,
+        #diff-overlay .monaco-diff-editor .char-delete {
+            background-color: rgba(248, 81, 73, 0.4) !important;
+        }
+
+        /* Overview ruler */
+        #diff-overlay .diffOverviewRuler .diffOverviewRuler-insert {
+            background: #2cbe4e !important;
+        }
+        #diff-overlay .diffOverviewRuler .diffOverviewRuler-delete {
+            background: #f85149 !important;
+        }
+
+        /* --- Manual Diff Decorations (LCS fallback when Monaco worker fails) --- */
+        .sf-diff-line-insert {
+            background-color: rgba(44, 190, 78, 0.22) !important;
+        }
+        .sf-diff-line-delete {
+            background-color: rgba(248, 81, 73, 0.22) !important;
+        }
+        .sf-diff-gutter-insert {
+            background-color: rgba(44, 190, 78, 0.4) !important;
+            width: 5px !important;
+            margin-left: 3px;
+        }
+        .sf-diff-gutter-delete {
+            background-color: rgba(248, 81, 73, 0.4) !important;
+            width: 5px !important;
+            margin-left: 3px;
+        }
+
+        /* --- Revert Arrows (VS Code-style hunk revert buttons) --- */
+        .sf-diff-revert-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 20px;
+            border: none;
+            border-radius: 3px;
+            background: rgba(79, 172, 254, 0.12);
+            color: #4facfe;
+            cursor: pointer;
+            padding: 0;
+            margin: 0 0 0 2px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .sf-diff-revert-arrow:hover {
+            background: rgba(79, 172, 254, 0.3);
+            color: #fff;
+        }
+        .sf-diff-revert-arrow:active {
+            background: rgba(79, 172, 254, 0.5);
+        }
+
+        /* --- Char-level Diff Highlights (darker shade within changed lines) --- */
+        .sf-diff-char-insert {
+            background-color: rgba(44, 190, 78, 0.38) !important;
+            border-radius: 2px;
+        }
+        .sf-diff-char-delete {
+            background-color: rgba(248, 81, 73, 0.38) !important;
+            border-radius: 2px;
+        }
+
+        /* --- Navigation Counter --- */
+        .diff-nav-counter {
+            font-size: 11px;
+            color: #aaa;
+            min-width: 36px;
+            text-align: center;
+            user-select: none;
+        }
+
+        /* --- Change Overview Strip (right edge minimap) --- */
+        #sf-diff-overview {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 10px;
+            background: rgba(255,255,255,0.03);
+            z-index: 5;
+            border-left: 1px solid #333;
+        }
+        .sf-diff-overview-marker {
+            position: absolute;
+            right: 1px;
+            width: 8px;
+            min-height: 3px;
+            border-radius: 1px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.15s;
+        }
+        .sf-diff-overview-marker:hover {
+            opacity: 1;
+        }
+        .sf-diff-overview-marker.active {
+            opacity: 1;
+            box-shadow: 0 0 0 1px #fff;
+        }
+        .sf-diff-overview-marker.insert {
+            background: #2cbe4e;
+        }
+        .sf-diff-overview-marker.delete {
+            background: #f85149;
+        }
+        .sf-diff-overview-marker.mixed {
+            background: linear-gradient(to bottom, #f85149 40%, #2cbe4e 60%);
+        }
+
+        /* --- Edge Case / Error States --- */
+        .diff-edge-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 48px 24px;
+            color: #888;
+        }
+
+        .diff-edge-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #ccc;
+        }
+
+        .diff-edge-desc {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        .diff-edge-retry {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 18px;
+            background: rgba(79, 172, 254, 0.1);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            border-radius: 4px;
+            color: #4facfe;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .diff-edge-retry:hover {
+            background: rgba(79, 172, 254, 0.2);
+            border-color: #4facfe;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="monaco-container"></div>
+
+    <script src="require.min.js"></script>
+    <script src="indexer.js"></script>
+    <script src="schema-manager.js"></script>
+    <script src="modules/soql-parser.js"></script>
+    <script src="modules/soql-autocomplete.js"></script>
+    <script src="lwc-intellisense.js"></script>
+    <script src="completions.js"></script>
+    <script src="apex-lsp-client.js"></script>
+    <script type="module" src="apex-language-config.js"></script>
+    <script src="editor.js"></script>
+</body>
+
+</html>
