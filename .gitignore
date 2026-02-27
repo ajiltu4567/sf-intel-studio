@@ -1,0 +1,11 @@
+# Automation Inspector local/dev artifacts
+ide/modules/automation-inspector.local.js
+ide/modules/automation-inspector-flow.local.js
+ide/modules/automation-inspector*.tmp
+ide/modules/automation-inspector*.log
+ide/modules/automation-inspector*.bak
+ide/modules/.automation-inspector*
+
+# Related local analysis/emulator scratch files
+ide/modules/flow-analysis.local.js
+ide/modules/workflow-emulator.local.js
