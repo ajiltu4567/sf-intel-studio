@@ -46,4 +46,4 @@ Pull requests are welcome. For significant changes please open an issue first to
 
 ## License
 
-MIT
+AGPLv3 (GNU Affero General Public License v3.0)

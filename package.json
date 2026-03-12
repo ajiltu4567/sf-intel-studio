@@ -1,5 +1,6 @@
 {
   "name": "sf-intel-studio",
   "version": "3.6.3",
-  "description": "Salesforce IDE Chrome Extension with Intelligence"
+  "description": "Salesforce IDE Chrome Extension with Intelligence",
+  "license": "AGPL-3.0-only"
 }
